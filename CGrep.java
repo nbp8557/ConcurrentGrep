@@ -86,7 +86,7 @@ public class CGrep{
         String searchPattern;
 
         //Check if there are invalid arguments
-        if(args.length <= 2){
+        if(args.length < 2){
             System.out.println("INVALID ARGUMENTS");
             System.out.println("Usage: java CGrep PATTERN [File ... ]");
             System.exit(1);
