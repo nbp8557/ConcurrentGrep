@@ -20,7 +20,7 @@ public class SearchTask implements Callable<Result>{
     // returns a boolean to represent the success
     @Override
     public Result call() throws Exception {
-        //Execute the search
+        //Execute the search and return the result
         return this.SearchFile();
     }
 
@@ -43,14 +43,14 @@ public class SearchTask implements Callable<Result>{
 
                 //if the line of the file matches the regex
                 if (Pattern.matches(this.searchRegex, lineText)){
-                    results.add(lineCounter+ " " + lineText);
+                    //Add the line number and the lines contents to the results list
+                    results.add(lineCounter+ ": " + lineText);
                 }
-                //TODO remove and add ThreadPool submission
-                System.out.println(lineText);
-
             }
         } catch (IOException e) {
             //Something IO related messed up
+            System.out.println("INVALID FILENAME");
+            System.out.println("The Filename: '"+this.file + "' Does not exist.");
             e.printStackTrace();
         }
 

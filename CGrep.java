@@ -1,15 +1,16 @@
-import java.io.*;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.concurrent.*;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 public class CGrep{
+    //Used for the thread pool
     private final ExecutorService threadPool;
-    private final CompletionService<Result> threadResults;
-
+    //Service for storing the results of a threads execution
+    private final ExecutorCompletionService<Result> threadResults;
+    //String array to store file names temporarily
     private String[] files;
+    //String to store the regex search pattern temporarily
     private String searchPattern;
 
     public CGrep(int numberOfThreads, String[] files, String searchPattern){
@@ -32,15 +33,40 @@ public class CGrep{
                 //Create a new SearchTask for each file which will search for the regex
                 // and submit it to the ThreadPool for execution.
                 //Also add the Future Object result from the Task to the results file
-                results.add(this.threadResults.submit(new SearchTask(this.searchPattern, file)));
+                results.add(this.threadResults.submit(new SearchTask(file,this.searchPattern)));
 
             }
         }
 
-        //Now display the results to the user as the come in from the SearchTasks
+        //Iterate through all of the results
+        // we have to loop a specific number of times because the ExecutorCompletionService
+        // Does not know how many times it calls the take method
+        for(int counter = 0; counter < results.size(); counter++) {
+            final Future<Result> threadResult;
 
+            try {
+                //The
+                threadResult = this.threadResults.take();
+                try {
+                    //Get the return value from the future AKA the Result Object
+                    final Result content = threadResult.get();
+                    System.out.println("\n The results for the File: " + content.filename);
+                    for(String line: content.results){
+                        System.out.println(line);
+                    }
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            } catch (InterruptedException e) {
+                //Issue when taking the results from the ExecutorCompletionService
+                e.printStackTrace();
+            }
 
+        }
 
+        //Tell the thread pool to shutdown
+        //NOTE: This shutdown method will wait for all tasks to complete
+        this.threadPool.shutdown();
     }
 
     public static void main(String[] args) {
@@ -65,7 +91,7 @@ public class CGrep{
             file[counter-1]=args[counter];
         }
 
-        //Check Validity of REGEX pattern
+        //Check that the user entered regex is valid
         try{
             Pattern.compile(searchPattern);
         }catch (PatternSyntaxException exception){
@@ -80,7 +106,6 @@ public class CGrep{
 
         //Search all of the files
         grep.SearchAllFiles();
-
     }
 
 
