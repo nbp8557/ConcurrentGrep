@@ -7,7 +7,7 @@ public class CGrep{
     //Used for the thread pool
     private final ExecutorService threadPool;
     //Service for storing the results of a threads execution
-    private final ExecutorCompletionService<Result> threadResults;
+    private final ExecutorCompletionService<Found> threadResults;
     //String array to store file names temporarily
     private String[] files;
     //String to store the regex search pattern temporarily
@@ -15,7 +15,7 @@ public class CGrep{
 
     public CGrep(int numberOfThreads, String[] files, String searchPattern){
         this.threadPool = Executors.newFixedThreadPool(numberOfThreads);
-        this.threadResults = new ExecutorCompletionService<Result>(threadPool);
+        this.threadResults = new ExecutorCompletionService<Found>(threadPool);
         this.files = files;
         this.searchPattern = searchPattern;
     }
@@ -23,7 +23,7 @@ public class CGrep{
     //Search all of the files
     public void SearchAllFiles(){
         //An arrayList to store all of the results
-        ArrayList<Future<Result>> results = new ArrayList<Future<Result>>();
+        ArrayList<Future<Found>> results = new ArrayList<Future<Found>>();
 
 
         //Loop through each file and queue up the tasks to the thread pool
@@ -42,14 +42,14 @@ public class CGrep{
         // we have to loop a specific number of times because the ExecutorCompletionService
         // Does not know how many times it calls the take method
         for(int counter = 0; counter < results.size(); counter++) {
-            final Future<Result> threadResult;
+            final Future<Found> threadResult;
 
             try {
                 //The
                 threadResult = this.threadResults.take();
                 try {
                     //Get the return value from the future AKA the Result Object
-                    final Result finalResult = threadResult.get();
+                    final Found finalResult = threadResult.get();
 
                     //If the file contained at least one match output the results
                     if(finalResult.results.size()>0) {
