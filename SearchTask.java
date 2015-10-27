@@ -51,7 +51,9 @@ public class SearchTask implements Callable<Result>{
             //Something IO related messed up
             System.out.println("INVALID FILENAME");
             System.out.println("The Filename: '"+this.file + "' Does not exist.");
-            e.printStackTrace();
+
+            //FOR DEBUGING
+            //e.printStackTrace();
         }
 
         //construct the result object to return to the main program

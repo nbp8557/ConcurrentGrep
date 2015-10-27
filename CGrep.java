@@ -49,13 +49,23 @@ public class CGrep{
                 threadResult = this.threadResults.take();
                 try {
                     //Get the return value from the future AKA the Result Object
-                    final Result content = threadResult.get();
-                    System.out.println("\n The results for the File: " + content.filename);
-                    for(String line: content.results){
-                        System.out.println(line);
+                    final Result finalResult = threadResult.get();
+
+                    //If the file contained at least one match output the results
+                    if(finalResult.results.size()>0) {
+                        System.out.println("\nThe results for the File: " + finalResult.filename);
+                        //Print each result's line number and text
+                        for (String line : finalResult.results) {
+                            System.out.println(line);
+                        }
                     }
+
                 } catch (ExecutionException e) {
-                    e.printStackTrace();
+                    System.out.println("EXECUTION ERROR");
+                    System.out.println("Future threw an exception while running");
+
+                    //FOR DEBUGING
+                    //e.printStackTrace();
                 }
             } catch (InterruptedException e) {
                 //Issue when taking the results from the ExecutorCompletionService
