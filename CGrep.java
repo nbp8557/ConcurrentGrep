@@ -21,10 +21,11 @@ public class CGrep{
 
     //Search all of the files
     public void SearchAllFiles(){
+        //An arrayList to store all of the results
         ArrayList<Future<Result>> results = new ArrayList<Future<Result>>();
 
 
-        //Loop through each file
+        //Loop through each file and queue up the tasks to the thread pool
         for(String file: this.files){
             //Make sure that the file is not null
             if(file != null) {
@@ -35,13 +36,11 @@ public class CGrep{
 
             }
         }
-    }
+
+        //Now display the results to the user as the come in from the SearchTasks
 
 
-    //This method creates a Callable task and hands execution to the thread pool
-    public void SearchLine(){
 
-        //pool.submit(new SearchTask("TEST",this.searchPattern));
     }
 
     public static void main(String[] args) {
