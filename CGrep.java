@@ -45,7 +45,7 @@ public class CGrep{
             final Future<Found> threadResult;
 
             try {
-                //The
+                //Get the future object when it has completed execution
                 threadResult = this.threadResults.take();
                 try {
                     //Get the return value from the future AKA the Result Object
@@ -86,7 +86,7 @@ public class CGrep{
         String searchPattern;
 
         //Check if there are invalid arguments
-        if(args.length != 2){
+        if(args.length <= 2){
             System.out.println("INVALID ARGUMENTS");
             System.out.println("Usage: java CGrep PATTERN [File ... ]");
             System.exit(1);
