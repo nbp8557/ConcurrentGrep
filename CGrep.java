@@ -59,6 +59,9 @@ public class CGrep{
                             System.out.println(line);
                         }
                     }
+		    else{
+                        System.out.println("\nThere was no results for the File: " + finalResult.filename );
+		    }
 
                 } catch (ExecutionException e) {
                     System.out.println("EXECUTION ERROR");
